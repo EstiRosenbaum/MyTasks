@@ -1,0 +1,15 @@
+FROM python
+
+ARG USERNAME
+
+WORKDIR /app
+
+COPY . /app
+
+RUN python -m pip install --upgrade pip && \
+    pip3 install -e .
+
+RUN --mount=type=secret,id=TOKEN \
+    pip install git+https://$USERNAME:$(cat /run/secrets/TOKEN)@github.com/EstiRosenbaum/MyTasks.git#subdirectory=azure_operations
+
+# CMD ["python", "main.py"]

@@ -1,0 +1,65 @@
+name: 🚀 publish services
+
+on: workflow_dispatch
+
+jobs:
+
+  publish:
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        directory:
+          - azure_operations
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: 📂 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔑 Log in to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔖 Get release tag name 
+        id: get_release
+        uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          latest: true
+
+      - name: ♻️ Set correct environment
+        run: |
+          TAG=${{ steps.get_release.outputs.tag_name }}
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+
+      - name: 🐳 Docker metadata
+        id: docker_meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/${{ matrix.directory }}
+          tags: |
+            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
+            type=semver,pattern={{major}},value=${{ env.TAG }}
+
+      - name: 🏗️ Build and push container image to registry
+        uses: docker/build-push-action@v5
+        with:
+          context: ./${{ matrix.directory }}
+          push: true
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
+          file: ./${{ matrix.directory }}/Dockerfile.prod
+          build-args: |
+            "USERNAME=${{ github.actor }}" 
+          secrets: |
+            "TOKEN=${{ secrets.GITHUB_TOKEN }}"
