@@ -38,7 +38,6 @@ class Copy:
 
     def _generate_folder_url(self, container_name, folder_name):
         url = AzureConnection(self.connection_string).get_url_container(container_name)
-      
         logging.info("A URL was created to send to azcopy")
 
         return url.generate_url(folder_name)

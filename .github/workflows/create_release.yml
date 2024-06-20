@@ -3,10 +3,10 @@ name: 🐍 Build Wheel Package for azure_operations and store it in the last tag
 on:
   push:
     branches: [main]
-    paths:
-      - "azure_operations/**"
+    # paths:
+    #   - "azure_operations/**"
     tags:
-      - 'v*'
+    - 'v*'
 jobs:
   build:
     name: Upload Python Release Asset
