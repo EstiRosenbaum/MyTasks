@@ -8,8 +8,6 @@ class Mock_blob_service_client():
         return container_name is not None
 
 
-
-
 @patch('src.azure_operations.azure_connection.BlobServiceClient.from_connection_string', return_value=Mock_blob_service_client())
 class TestConnection(unittest.TestCase):
 
