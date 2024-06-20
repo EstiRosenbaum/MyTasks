@@ -5,7 +5,8 @@ on:
     branches: [main]
     paths:
       - "azure_operations/**"
-
+    tags:
+    - 'v*'
 jobs:
   build:
     name: Upload Python Release Asset

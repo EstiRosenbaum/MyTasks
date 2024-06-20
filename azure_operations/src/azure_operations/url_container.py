@@ -38,7 +38,5 @@ class UrlContainer():
             permission=permission,
             expiry=expiry,
         )
-
         logging.info(f"A token is created for the container {self.container_name} .")
-        
         return sas_token
