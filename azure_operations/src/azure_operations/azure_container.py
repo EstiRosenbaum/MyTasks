@@ -7,7 +7,7 @@ class AzureContainer():
      
         logging.info("Creating an instance from the AzureContainer class .")
 
-# ----------------file-----------------------------
+# -------------file------------------------
 
     def get_file(self, file_path): 
         ''' A function that receives a path to a file and returns the requested file. '''
