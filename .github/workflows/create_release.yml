@@ -39,7 +39,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         env:
           PACKAGE_WHEEL: "azure_operations/dist/*.whl"
-        if: startsWith(github.ref, 'refs/tags/')
+        # if: startsWith(github.ref, 'refs/tags/')
         with:
+          tag_name: v1
           files: |
              ${{ env.PACKAGE_WHEEL }}
