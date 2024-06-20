@@ -1,13 +1,12 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from src.azure_operations.operations_container import *
+from src.azure_operations.azure_container import *
 from src.azure_operations.azure_connection import *
 
 
 class Mock_blob_service_client():
     def get_container_client(self, container_name):
         return container_name is not None
-
 
 @patch('src.azure_operations.azure_connection.BlobServiceClient.from_connection_string', return_value=Mock_blob_service_client())
 class TestConnectAzure(unittest.TestCase):

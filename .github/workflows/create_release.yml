@@ -1,10 +1,10 @@
-name: 🐍 Create Python Release
+name: 🐍 Build Wheel Package for azure_operations and store it in the last tag
 
 on:
   push:
     branches: [main]
-    tags:
-    - 'v*'
+    paths:
+      - "azure_operations/**"
 
 jobs:
   build:
@@ -22,24 +22,24 @@ jobs:
       - name: 🔵 Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.11'  
+          python-version: '3.11'
           
       - name: ⏬ Install Dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r azure_operations/requirements.azure.txt
+          python -m pip install build
+          pip install -r azure_operations/requirements.*.txt  
          
       - name: 🛠️ Build Wheel Package
         working-directory: azure_operations 
         run: 
           python -m build
 
-      - name: 🔖 Create Release
+      - name: 🔖 Insert whl file into latest tag
         uses: softprops/action-gh-release@v1
         env:
           PACKAGE_WHEEL: "azure_operations/dist/*.whl"
-        if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: |
-             ${{ env.PACKAGE_WHEEL }}
- 
+          files: ${{ env.PACKAGE_WHEEL }}  
+          tag_name: latest 
+          release_name: Release ${{ github.run_number }}
+          draft: false
